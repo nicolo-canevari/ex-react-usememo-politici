@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 // Css
 import './index.css';
@@ -107,13 +107,13 @@ const PoliticiansPage = () => {
             });
     }, []);
 
-    // Crea un array filtrato dei politici in base al termine di ricerca
-    const filteredPoliticians = politicians.filter(politician =>
-        // Controlla se il nome contiene il termine
-        politician.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        // Controlla se la biografia contiene il termine
-        politician.biography.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Usa useMemo per memorizzare il risultato del filtro finché dipendenze non cambiano
+    const filteredPoliticians = useMemo(() => {
+        return politicians.filter(politician =>
+            politician.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            politician.biography.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    }, [politicians, searchTerm]);
 
     // Mostra un messaggio durante il caricamento dei dati
     if (loading) return <p>Caricamento in corso...</p>;
